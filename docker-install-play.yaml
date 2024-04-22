@@ -1,0 +1,32 @@
+---
+- name: Install Python, Docker, and HTTPD
+  hosts: all
+  become: true
+  tasks:
+    - name: Install Python
+      package:
+        name: python
+        state: present
+
+    - name: Install Docker
+      package:
+        name: docker
+        state: present
+
+    - name: Install HTTPD
+      package:
+        name: httpd
+        state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Start HTTPD service
+      service:
+        name: httpd
+        state: started
+        enabled: true
+

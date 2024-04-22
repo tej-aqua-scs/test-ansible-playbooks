@@ -1,0 +1,27 @@
+---
+- name: Create user and enable password authentication
+  hosts: all
+  become: true
+  tasks:
+    - name: Add user "Teja"
+      user:
+        name: Teja
+        state: present
+        password: "{{ 'your_password' | password_hash('sha512') }}"
+        update_password: always
+
+    - name: Enable password authentication
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^PasswordAuthentication'
+        line: 'PasswordAuthentication yes'
+        state: present
+      notify:
+        - restart sshd
+
+  handlers:
+    - name: restart sshd
+      service:
+        name: sshd
+        state: restarted
+

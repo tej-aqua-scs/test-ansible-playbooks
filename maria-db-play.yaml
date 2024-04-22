@@ -1,0 +1,30 @@
+---
+- name: Install and setup MariaDB
+  hosts: all
+  become: true
+  tasks:
+    - name: Install MariaDB Server
+      package:
+        name: mariadb-server
+        state: present
+
+    - name: Start MariaDB service
+      service:
+        name: mariadb
+        state: started
+        enabled: true
+
+    - name: Secure MariaDB installation
+      expect:
+        command: mysql_secure_installation
+        responses:
+          'Enter current password for root (enter for none):': '\n'
+          'Set root password? [Y/n]': 'Y\n'
+          'New password:': 'your_root_password\n'
+          'Re-enter new password:': 'your_root_password\n'
+          'Remove anonymous users? [Y/n]': 'Y\n'
+          'Disallow root login remotely? [Y/n]': 'Y\n'
+          'Remove test database and access to it? [Y/n]': 'Y\n'
+          'Reload privilege tables now? [Y/n]': 'Y\n'
+      ignore_errors: yes
+
